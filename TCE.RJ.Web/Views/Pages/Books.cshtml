@@ -1,0 +1,106 @@
+﻿@{
+	ViewBag.Title = "Livros";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts{
+	@Scripts.Render("~/bundles/app")
+	@Scripts.Render("~/bundles/jqueryval")
+	@Scripts.Render("~/bundles/jquerymasked")
+
+	<script>
+		$(function () {			
+			$("#inputISBN").mask("9999999999999");			
+			$('#inputPublicacao').datetimepicker({
+				format: 'L'
+			});
+		});
+	</script>
+}
+<br />
+
+<div class="page-header">
+	<h1>Livraria</h1>
+</div>
+
+<div class="row">
+	<div class="col-md-4">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h2 class="panel-title">Livros</h2>
+			</div>
+			<div class="panel-body">
+				<table data-bind="foreach: books" style="width:100%;">
+					<tr>
+						<td><img data-bind="attr:{src: Capa}" style="width:30px!important;height:30px!important;" /></td>
+						<td><strong><span data-bind="text:Nome"></span></strong>&nbsp;(ISBN:<span data-bind="text:ISBN"></span>)</td>						
+						<td style="text-align:right;"><a href="#" data-bind="click: $parent.getBookDetail" class="btn btn-default">Ver</a></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div class="alert alert-danger" data-bind="visible: error"><p data-bind="text: error"></p></div>
+	</div>
+
+	<!-- ko if:detail() -->
+	<div class="col-md-4">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h2 class="panel-title">Detalhe</h2>
+			</div>
+			<table class="table">
+				<tr><td>Capa</td><td><img data-bind="attr:{src:detail().Capa}" style="width:60px!important;height:60px!important;" /></td></tr>
+				<tr><td>ISBN</td><td data-bind="text: detail().ISBN"></td></tr>
+				<tr><td>Autor</td><td data-bind="text: detail().Autor"></td></tr>
+				<tr><td>Título</td><td data-bind="text: detail().Nome"></td></tr>
+				<tr><td>Preço</td><td data-bind="text: detail().Preco"></td></tr>
+				<tr><td>Publicação</td><td data-bind="text: detail().DataPublicacao"></td></tr>
+			</table>
+		</div>
+	</div>
+	<!-- /ko -->
+
+	<div class="col-md-4">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h2 class="panel-title">Incluir</h2>
+			</div>
+			<div class="panel-body">
+				<form class="form-horizontal" data-bind="submit: addBook">
+					<div class="form-group" data-bind="with: newBook">
+						<label for="inputISBN" class="col-sm-3 control-label">ISBN</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="inputISBN" data-bind="value: $root.ISBN" placeholder="Código ISBN" />
+						</div>
+						<label for="inputTitulo" class="col-sm-3 control-label">Título</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="inputTitulo" data-bind="value: $root.Nome" placeholder="Título do Livro" />
+						</div>
+
+						<label for="inputAutor" class="col-sm-3 control-label">Autor</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" id="inputAutor" data-bind="value: $root.Autor" placeholder="Nome do Autor" />
+						</div>
+
+						<label for="inputPreco" class="col-sm-3 control-label">Preço</label>
+						<div class="col-sm-9">							 
+							<input type="text" data-currency="BRL" class="form-control bfh-currencies" id="inputPreco" data-bind="value: $root.Preco" placeholder="0,00" />
+						</div>
+
+						<label for="inputPublicacao" class="col-sm-3 control-label">Publicação</label>
+						<div class="col-sm-9">
+							<input type="datetime" class="form-control date" id="inputPublicacao" data-bind="value: $root.DataPublicacao" placeholder="01/29/1976" />
+						</div>
+
+						<label for="inputCapa" class="col-sm-3 control-label">Capa</label>
+						<div class="col-sm-9">
+							<input type="file" accept="image/*" class="form-control fileChooser" id="inputFile" data-bind="event: {change: $root.fileUpload}" placeholder="" />
+						</div>
+
+					</div>
+					<button type="submit" class="btn btn-default btn-large btn-success">Gravar</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
